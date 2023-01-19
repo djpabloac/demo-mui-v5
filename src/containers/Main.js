@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@mui/styles'
-import { Box, Typography, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material'
+import { Box, Dialog, DialogTitle, DialogContent, IconButton, CircularProgress, ButtonGroup, Button } from '@mui/material'
 import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import { useGetPokemon } from '../hook/pokemon/useGetPokemon'
-import CardBasic from '../components/CardBasic'
 import DetailBase from '../components/DetailBase'
+import CardsBasic from '../components/CardsBase'
+import ListBase from '../components/ListBase'
 
-const Main = () => {
+export const viewType = {
+  list: 'list',
+  card: 'card'
+}
+
+const Main = ({ viewInit = viewType.card }) => {
   const classes = useStyles()
 
+  const [view, setView] = useState(viewInit)
   const [pokemonSelected, setPokemonSelected] = useState(null)
 
   const { loading, pokemons } = useGetPokemon()
@@ -23,19 +31,34 @@ const Main = () => {
     setPokemonSelected(null)
   }
 
+  const handleChangeView = (viewCurrent) => {
+    setView(viewCurrent)
+  }
+
   return (
     <Box className={classes.root}>
-      <Typography variant='h5'>Main</Typography>
+      <ButtonGroup>
+        <Button variant={view === viewType.card ? 'contained' : 'outlined'} onClick={() => handleChangeView(viewType.card)}>Card</Button>
+        <Button variant={view === viewType.list ? 'contained' : 'outlined'} onClick={() => handleChangeView(viewType.list)}>List</Button>
+      </ButtonGroup>
       <Box className={classes.container}>
         {
-          !loading && pokemons.map((item, index) => (
-            <CardBasic
-              key={`MainCard-${index}`}
-              title={item.name}
-              url={item.url}
-              photo={item.photo}
-              onClick={() => handleClick(item)} />
-          ))
+          loading && (
+            <CircularProgress />
+          )
+        }
+        {
+          view === viewType.card && !loading && (
+            <CardsBasic
+              pokemons={pokemons}
+              onClickItem={handleClick}/>
+          )
+        }
+        {
+          view === viewType.list && !loading && (
+            <ListBase
+              pokemons={pokemons}/>
+          )
         }
       </Box>
       {
@@ -77,5 +100,9 @@ const useStyles = makeStyles((theme) => ({
     gap          : theme.spacing(1)
   }
 }), { name: 'Main' })
+
+Main.propTypes = {
+  viewInit: PropTypes.string
+}
 
 export default Main

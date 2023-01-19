@@ -18,9 +18,6 @@ const theme = createTheme({
   }
 })
 
-// eslint-disable-next-line no-console
-console.log(theme)
-
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>

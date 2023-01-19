@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
 
-const CardBasic = ({ title, description, photo, onClick }) => {
+const CardBase = ({ title, description, photo, onClick }) => {
   return (
     <Card sx={{ minWidth: 175 }}>
       <CardMedia
@@ -26,11 +26,11 @@ const CardBasic = ({ title, description, photo, onClick }) => {
   )
 }
 
-CardBasic.propTypes = {
+CardBase.propTypes = {
   title      : PropTypes.string,
   description: PropTypes.string,
   photo      : PropTypes.string,
   onClick    : PropTypes.func
 }
 
-export default CardBasic
+export default CardBase
